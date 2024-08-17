@@ -1,6 +1,6 @@
 import { Center, Environment, OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { XR, XROrigin, createXRStore, XRHandModel, XRHitTest, useXRHandState } from "@react-three/xr";
+import { XR, XRHitTest, XROrigin, createXRStore } from "@react-three/xr";
 import { Suspense, useRef } from "react";
 import { Model } from "./Datsun.jsx";
 import { Matrix4, Vector3 } from "three";
@@ -14,11 +14,14 @@ const store = createXRStore({
       const state = useXRHandState();
       return (
         <>
-          <XRHandModel />
           <XRHitTest
             space={state.inputSource.targetRaySpace}
             onResults={(results, getWorldMatrix) => {
-              if (results.length === 0) return;
+              console.log(results);
+
+              if (results.length === 0) {
+                return;
+              }
               getWorldMatrix(matrixHelper, results[0]);
               hitTestPosition.setFromMatrixPosition(matrixHelper);
             }}
@@ -29,14 +32,9 @@ const store = createXRStore({
   },
 });
 
-function HitTestModel() {
+function Point() {
   const ref = useRef();
-  useFrame(() => {
-    if (ref.current) {
-      ref.current.position.copy(hitTestPosition);
-    }
-  });
-
+  useFrame(() => ref.current?.position.copy(hitTestPosition));
   return (
     <group ref={ref}>
       <Model />
@@ -73,15 +71,10 @@ export function App() {
           <group position={[0, -0.75, 0]}>
             <Suspense>
               <Center top>
-                <HitTestModel />
+                <Point />
               </Center>
             </Suspense>
-            <directionalLight position={[1, 8, 1]} castShadow />
-            <ambientLight />
-            <mesh receiveShadow rotation-x={-Math.PI / 2} scale={100}>
-              <shadowMaterial opacity={0.7} />
-              <planeGeometry />
-            </mesh>
+
             <group position={[0, 0, 2.6]}>
               <XROrigin />
             </group>

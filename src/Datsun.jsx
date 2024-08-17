@@ -11,7 +11,7 @@ import { useGLTF } from "@react-three/drei";
 export function Model({ color, ...props }) {
   const { nodes, materials } = useGLTF("datsun-transformed.glb");
   return (
-    <group {...props} dispose={null} scale={0.2}>
+    <group {...props} dispose={null} scale={0.5}>
       <mesh castShadow receiveShadow geometry={nodes.Cylinder007_alloy_0_1.geometry} material={materials.alloy} />
       <mesh castShadow receiveShadow geometry={nodes.Cylinder007_alloy_0_2.geometry} material={materials.headlights} />
       <mesh castShadow receiveShadow geometry={nodes.Cylinder007_alloy_0_3.geometry} material={materials.black_paint} />
